@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const prefix = chalk.blue('?');
 
 export default class Authenticator {
-  private sessionPath: string = resolve(process.mainModule!.path, '..', 'session.json')
+  private sessionPath: string = resolve(process.cwd(), './', 'session.json');
 
   private saveSession(data: object) {
     writeFileSync(this.sessionPath, JSON.stringify(data));

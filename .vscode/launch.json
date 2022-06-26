@@ -1,0 +1,28 @@
+// 20220625083420
+// https://gist.githubusercontent.com/nmchenry01/71a821ffb704497caadd4d520db6fd31/raw/662eb7d55792f947fcc5a09195d8f11f3735e890/launch.json
+
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug Nest Framework",
+        "args": [
+          "${workspaceFolder}/src/main.ts"
+        ],
+        "runtimeArgs": [
+          "--nolazy",
+          "-r",
+          "ts-node/register",
+          "-r",
+          "tsconfig-paths/register"
+        ],
+        "sourceMaps": true,
+        "envFile": "${workspaceFolder}/.env",
+        "cwd": "${workspaceRoot}",
+        "console": "integratedTerminal",
+        "protocol": "inspector"
+      }
+    ]
+  }

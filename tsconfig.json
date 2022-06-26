@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "ES6",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
     // "lib": [],
     "allowJs": true,
     "sourceMap": true,
@@ -10,7 +10,6 @@
     "noEmit": true,
     "skipLibCheck": true,
     "pretty": true,
-
     /* Strict Type-Checking Options */
     "strict": true,
     "noImplicitAny": true,
@@ -19,16 +18,23 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-
     /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-
     /* Module Resolution Options */
     "moduleResolution": "node",
+    "outDir": "dist",
     "baseUrl": "./src",
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules"]
+  "ts-node": {
+    "esm": true
+  },
+  "lib": [
+    "esnext"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
