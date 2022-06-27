@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-const { writeFileSync } = require('fs');
-const { resolve } = require('path');
+import { writeFileSync } from 'fs';
+import { resolve } from 'path';
 
 writeFileSync(resolve(process.cwd(), 'session.json'), '{}');
