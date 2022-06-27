@@ -3,6 +3,24 @@ import chalk from 'chalk';
 import { ActionMessage, AnimationMessage, BaseRavenMediaMessage, FelixShareMessage, LinkMessage, MediaMessage, MediaShareMessage, ReelShareMessage, StoryShareMessage, Video, VoiceMessage } from 'types/messages';
 import { getRavenMediaType, isRavenExpired, isRavenMessage, isSentRaven } from './raven-message';
 
+export interface ReactionItem {
+  emojis?: Emoji[];
+  like?: [];
+}
+
+export interface Emoji {
+  timestamp: string;
+  client_context: string;
+  sender_id: string;
+  emoji: string;
+  super_react_type: string;
+}
+
+export interface ReactionItems extends DirectInboxFeedResponseItemsItem {
+  reactions?: ReactionItem;
+  likes_count?: number;
+}
+
 type Formatter = (msg: DirectInboxFeedResponseItemsItem) => string;
 export default class MessageFormatter {
   private formatterMap: Record<string, Formatter> = {
@@ -25,7 +43,7 @@ export default class MessageFormatter {
   public setUsers(users: Record<number, string>) {
     this.users = users;
   }
-  
+
   public format(msg: DirectInboxFeedResponseItemsItem): string {
     const user = this.users[msg.user_id];
     try {
@@ -42,24 +60,34 @@ export default class MessageFormatter {
         return paragraph
           .split(' ')
           .reduce<string[][]>((acc, word) => {
-          const row = acc.pop()!;
-          if (`${row.join(' ')} ${word}`.length < lineLength) {
-            row.push(word);
-            acc.push(row);
-          } else {
-            acc.push(row, [word]);
-          }
-          return acc;
-        }, [[]])
+            const row = acc.pop()!;
+            if (`${row.join(' ')} ${word}`.length < lineLength) {
+              row.push(word);
+              acc.push(row);
+            } else {
+              acc.push(row, [word]);
+            }
+            return acc;
+          }, [[]])
           .map(row => row.join(' '))
           .join('\n');
       });
     return chunks.join('\n');
   }
 
-  private textFormatter(msg: DirectInboxFeedResponseItemsItem): string {
+  private textFormatter(msg: ReactionItems): string {
     const user = this.users[msg.user_id];
-    return `${chalk.bold.blue(user)}: ${this.maxLength(msg.text!, 100)}`;
+
+    let emojis = "";
+
+    if (msg.reactions?.emojis) {
+      emojis = "react:";
+      msg.reactions?.emojis.forEach(reaction => {
+        emojis += reaction.emoji;
+      })
+    }
+
+    return `${chalk.bold.blue(user)}: ${this.maxLength(msg.text!, 100)} ${emojis}`;
   }
 
   private actionFormatter(msg: DirectInboxFeedResponseItemsItem): string {
@@ -81,7 +109,7 @@ export default class MessageFormatter {
       `${chalk.green('[LINK URL]:')} ${link.link.link_context.link_url}`,
     ].join('\n');
   }
-  
+
   private ravenFormatter(msg: DirectInboxFeedResponseItemsItem): string {
     const media = msg as unknown as BaseRavenMediaMessage;
     const user = this.users[msg.user_id];

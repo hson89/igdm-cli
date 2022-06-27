@@ -75,7 +75,7 @@ export default class DirectMessaging {
     for (let i = 0; i < thread.items.length; i += 1) {
       const msg = thread.items[i];
       const content = await this.formatter.format(msg);
-      console.log(new Date(parseInt(msg.timestamp)) + ': ' + content);
+      console.log((new Date(parseInt(msg.timestamp)/1000)).toLocaleString() + ': ' + content);
     }
 
     console.log('\n');
